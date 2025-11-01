@@ -28,4 +28,4 @@ TODO
 
 ## Thanks
 
-Shout out to @esamattis' (`react-zorm`)[https://github.com/esamattis/react-zorm] for being a big inspiration, but it's sadly no longer maintained.
+Shout out to @esamattis' [`react-zorm`](https://github.com/esamattis/react-zorm) for being a big inspiration, but it's sadly no longer maintained.
