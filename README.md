@@ -1,16 +1,16 @@
 # React F3
 
-Some components, hooks & utilities for creating and managing forms in React, with validation through Zod.
+Some simple components, hooks & utilities for creating and managing forms in React.
 
 ## Why?
 
-Forms should be simple. React code should be idiomatic. Code should be type-safe.
+Creating forms should be simple. React code should be idiomatic. Code should be type-safe.
 
-For some reason, all of the most used form libraries for React either:
+Somehow, all the biggest form libraries for React do not tick all these boxes. They either:
 
-- Are very complicated just to be type-safe
-- Create their own state management solution instead of leveraging React for what it was made for
-- Aren't type-safe to begin with
+- Jump through crazy hoops to prevent React form doing state management, which it's made for.
+- Sacrifice usability for type-safety.
+- Aren't type-safe at all.
 
 React-f3 promises to take a step back, rethink what a form actually is (and importantly, what it **_is not_**), and makes developing these forms a delightful yet robust experience.
 
