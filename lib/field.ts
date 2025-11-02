@@ -58,6 +58,6 @@ const getFieldName = (
 				return getFieldName([...path, arg]);
 			}
 
-			return path.join(".");
+			return path.map(String).join(".");
 		}
 	});
