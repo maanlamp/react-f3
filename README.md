@@ -46,7 +46,7 @@ It stands for `form, form, form`, of course! This is because, when using this pa
 ### Email & password
 
 <details>
-<summary>Click here to open the example using react-select</summary>
+<summary>Click here to open a simple example for a login form using email and password</summary>
 
 ```tsx
 import { Form, useForm } from "react-f3";

@@ -1,6 +1,6 @@
 {
 	"name": "react-f3",
-	"version": "1.0.2",
+	"version": "1.0.4",
 	"type": "module",
 	"main": "dist/react-f3.js",
 	"types": "dist/react-f3.d.ts",
