@@ -53,58 +53,55 @@ import { Form, useForm } from "react-f3";
 import z from "zod";
 
 const FormSchema = z.object({
-  email: z.string().refine(x => x.includes("@")),
-  password: z.string().min(8)
+	email: z.string().refine(x => x.includes("@")),
+	password: z.string().min(8)
 });
 
 const Issue = ({
-  issue
+	issue
 }: {
-  issue: z.core.$ZodIssue;
+	issue: z.core.$ZodIssue;
 }) => <p style={{ color: "red" }}>{issue.message}</p>;
 
 const UserForm = () => {
-  const form = useForm({
-    schema: FormSchema,
-    onSubmit: async data => {
-      // Simulate network, wait a second
-      await new Promise(res => setTimeout(res, 1000));
-      // Validated and transformed data!
-      console.log(data);
-    }
-  });
+	const form = useForm({
+		schema: FormSchema,
+		onSubmit: async data => {
+			// Simulate network, wait a second
+			await new Promise(res => setTimeout(res, 1000));
+			// Validated and transformed data!
+			console.log(data);
+		}
+	});
 
-  return (
-    <Form form={form}>
-      <label>
-        <span>Email</span>
-        <input name={form.fields.email()} />
-        {form.errors.email(issue => (
-          <Issue issue={issue} />
-        ))}
-      </label>
-      <label>
-        <span>Password</span>
-        <input
-          name={form.fields.password()}
-          type="password"
-        />
-        {form.errors.password(issue => (
-          <Issue issue={issue} />
-        ))}
-      </label>
-      <button type="submit">Submit</button>
-    </Form>
-  );
+	return (
+		<Form form={form}>
+			<label>
+				<span>Email</span>
+				<input name={form.fields.email()} />
+				{form.errors.email(issue => (
+					<Issue issue={issue} />
+				))}
+			</label>
+			<label>
+				<span>Password</span>
+				<input
+					name={form.fields.password()}
+					type="password"
+				/>
+				{form.errors.password(issue => (
+					<Issue issue={issue} />
+				))}
+			</label>
+			<button type="submit">Submit</button>
+		</Form>
+	);
 };
 ```
 
-</details>
-
-
 That's it. No default state in the form, as that's not the place where your defaults should be stored. Notice how you can use an error chain with a render function to conditionally render when there is an issue matching the issue chain.
 
-<br/>
+</details>
 
 ### Integration with `react-select`
 
@@ -115,133 +112,132 @@ Because we can't rely on the FormData API to distinguish between single and mult
 
 ```tsx
 import {
-  useMemo,
-  useState,
-  type ReactNode
+	useMemo,
+	useState,
+	type ReactNode
 } from "react";
 import {
-  Form,
-  useForm,
-  type FieldGetter
+	Form,
+	useForm,
+	type FieldGetter
 } from "react-f3";
 import ReactSelect, {
-  type GroupBase,
-  type Props
+	type GroupBase,
+	type Props
 } from "react-select";
 import z from "zod";
 
 const hobbies = [
-  "Programming",
-  "Thinking about programming",
-  "Making music",
-  "Sleeping"
+	"Programming",
+	"Thinking about programming",
+	"Making music",
+	"Sleeping"
 ];
 
 const FormSchema = z.object({
-  hobbies: z.array(z.enum(hobbies)).min(2)
+	hobbies: z.array(z.enum(hobbies)).min(2)
 });
 
 const Issue = ({
-  issue
+	issue
 }: {
-  issue: z.core.$ZodIssue;
+	issue: z.core.$ZodIssue;
 }) => <p style={{ color: "red" }}>{issue.message}</p>;
 
 type SelectProps = Readonly<{
-  name: (n: number) => FieldGetter;
+	name: (n: number) => FieldGetter;
 }>;
 
 type Option<T> = Readonly<{
-  label: ReactNode;
-  value: T;
+	label: ReactNode;
+	value: T;
 }>;
 
 const Select = <
-  T,
-  IsMulti extends boolean,
-  Group extends GroupBase<Option<T>>
+	T,
+	IsMulti extends boolean,
+	Group extends GroupBase<Option<T>>
 >({
-  name,
-  onChange,
-  ...props
+	name,
+	onChange,
+	...props
 }: Omit<
-  Props<Option<T>, IsMulti, Group>,
-  keyof SelectProps
+	Props<Option<T>, IsMulti, Group>,
+	keyof SelectProps
 > &
-  SelectProps) => {
-  const [values, setValues] = useState<
-    ReadonlyArray<Option<T>>
-  >([]);
+	SelectProps) => {
+	const [values, setValues] = useState<
+		ReadonlyArray<Option<T>>
+	>([]);
 
-  return (
-    <>
-      <ReactSelect
-        onChange={(options, meta) => {
-          onChange?.(options, meta);
-          setValues([options].flat().filter(x => !!x));
-        }}
-        {...props}
-      />
-      {values.map(({ value }, i) => {
-        const str = String(value);
-        return (
-          <input
-            key={str}
-            type="hidden"
-            name={name(i)()}
-            value={str}
-          />
-        );
-      })}
-    </>
-  );
+	return (
+		<>
+			<ReactSelect
+				onChange={(options, meta) => {
+					onChange?.(options, meta);
+					setValues([options].flat().filter(x => !!x));
+				}}
+				{...props}
+			/>
+			{values.map(({ value }, i) => {
+				const str = String(value);
+				return (
+					<input
+						key={str}
+						type="hidden"
+						name={name(i)()}
+						value={str}
+					/>
+				);
+			})}
+		</>
+	);
 };
 
 const Hobbiesform = () => {
-  const form = useForm({
-    schema: FormSchema,
-    onSubmit: async data => {
-      // Simulate network, wait a second
-      await new Promise(res => setTimeout(res, 1000));
-      // Validated and transformed data!
-      console.log(data);
-    }
-  });
+	const form = useForm({
+		schema: FormSchema,
+		onSubmit: async data => {
+			// Simulate network, wait a second
+			await new Promise(res => setTimeout(res, 1000));
+			// Validated and transformed data!
+			console.log(data);
+		}
+	});
 
-  const options = useMemo(
-    () =>
-      hobbies.map(hobby => ({
-        label: hobby,
-        value: hobby
-      })),
-    [hobbies]
-  );
+	const options = useMemo(
+		() =>
+			hobbies.map(hobby => ({
+				label: hobby,
+				value: hobby
+			})),
+		[hobbies]
+	);
 
-  return (
-    <Form form={form}>
-      <label>
-        <span>Hobbies</span>
-        <Select
-          name={form.fields.hobbies}
-          isMulti
-          options={options}
-        />
-        {form.errors.hobbies(issue => (
-          <Issue issue={issue} />
-        ))}
-      </label>
-      <button type="submit">Submit</button>
-    </Form>
-  );
+	return (
+		<Form form={form}>
+			<label>
+				<span>Hobbies</span>
+				<Select
+					name={form.fields.hobbies}
+					isMulti
+					options={options}
+				/>
+				{form.errors.hobbies(issue => (
+					<Issue issue={issue} />
+				))}
+			</label>
+			<button type="submit">Submit</button>
+		</Form>
+	);
 };
 ```
-
-</details>
-
 
 As you can see, you can pass the `FieldGetter` directly to a Select component, which in turn can render hidden inputs per value using the getter with an index.
 
 The type juggling around the Select component is just to treat single and multi inputs the same. Single input selects will work without issue, as they don't yield array values.
+
+</details>
 
 <br/>
 <br/>
