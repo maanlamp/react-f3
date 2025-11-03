@@ -1,6 +1,6 @@
 {
 	"name": "react-f3",
-	"version": "1.0.5",
+	"version": "1.0.7",
 	"type": "module",
 	"description": "Components, hooks & utilities for creating and managing delightfully simple form experiences in React.",
 	"keywords": [

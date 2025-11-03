@@ -101,6 +101,7 @@ const UserForm = () => {
 
 </details>
 
+
 That's it. No default state in the form, as that's not the place where your defaults should be stored. Notice how you can use an error chain with a render function to conditionally render when there is an issue matching the issue chain.
 
 <br/>
@@ -236,6 +237,7 @@ const Hobbiesform = () => {
 ```
 
 </details>
+
 
 As you can see, you can pass the `FieldGetter` directly to a Select component, which in turn can render hidden inputs per value using the getter with an index.
 
