@@ -1,7 +1,21 @@
 {
 	"name": "react-f3",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"type": "module",
+	"description": "Components, hooks & utilities for creating and managing delightfully simple form experiences in React.",
+	"keywords": [
+		"react",
+		"form",
+		"forms",
+		"hook",
+		"hooks",
+		"typescript",
+		"typesafe",
+		"type-safe"
+	],
+	"homepage": "https://github.com/maanlamp/react-f3",
+	"author": "Wouter Lem (https://github.com/maanlamp)",
+	"license": "MIT",
 	"main": "dist/react-f3.js",
 	"types": "dist/react-f3.d.ts",
 	"scripts": {
