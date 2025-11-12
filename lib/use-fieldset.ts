@@ -6,7 +6,7 @@ import {
 import type { ZodObject, ZodRawShape } from "zod";
 import type { UseFormReturn } from "./use-form";
 
-const useFieldset = <
+export const useFieldset = <
 	Shape extends ZodRawShape,
 	Schema extends ZodObject<Shape>
 >(
@@ -43,5 +43,3 @@ const useFieldset = <
 
 	return { fields, add, remove };
 };
-
-export default useFieldset;
