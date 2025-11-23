@@ -331,7 +331,7 @@ That's the neat part: you don't! React is specifically made to track your applic
 
 _But then what would we recommend instead?_
 
-Often times, your default state lives on the server, so it would only be logical to simply keep it there. Consider using a library like [`react-query`](https://tanstack.com/query/latest/docs/framework/react/overview) for fetching your defaults, and leverage React's components to just pass that data through. Rendering defaults is a simple as providing the `defaultValue` prop to an `<input/>`!
+Often times, your default state lives on the server, so it would only be logical to simply keep it there. Consider using a library like [`react-query`](https://tanstack.com/query/latest/docs/framework/react/overview) for fetching your defaults, and leverage React's components to just pass that data through. Rendering defaults is as simple as providing the `defaultValue` prop to an `<input/>`!
 
 ```tsx
 const Example = () => {
