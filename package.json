@@ -1,6 +1,6 @@
 {
   "name": "react-f3",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "type": "module",
   "description": "Components, hooks & utilities for creating and managing delightfully simple form experiences in React.",
   "keywords": [
@@ -11,7 +11,9 @@
     "hooks",
     "typescript",
     "typesafe",
-    "type-safe"
+    "type-safe",
+    "zod",
+    "validation"
   ],
   "homepage": "https://github.com/maanlamp/react-f3",
   "author": "Wouter Lem (https://github.com/maanlamp)",
