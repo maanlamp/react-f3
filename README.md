@@ -320,17 +320,6 @@ The type juggling around the Select component is just to treat single and multi 
 <br/>
 <br/>
 
-## What does F3 stand for?
-
-It stands for `form, form, form`, of course! This is because, when using this package, your forms will often start with the following:
-
-```tsx
-<Form form={form}>
-```
-
-<br/>
-<br/>
-
 ## FAQ
 
 <details>
@@ -443,6 +432,17 @@ It's a small helper component that wraps your forms in a `<fieldset/>` which get
 <br/>
 
 Do you have any unanswered questions? Create an issue! If it gets enough 👍s it will get added here.
+
+<br/>
+<br/>
+
+## What does F3 stand for?
+
+It stands for `form, form, form`, of course! This is because, when using this package, your forms will often start with the following:
+
+```tsx
+<Form form={form}>
+```
 
 <br/>
 <br/>
