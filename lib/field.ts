@@ -18,16 +18,14 @@ export type DeepNonNullable<T> = T extends Primitive | Date | File
 
 export type FieldGetter = () => string;
 
+export type IsAny<T> = 0 extends 1 & T ? true : false;
+
 export type FieldChain<T extends object> = {
-  [P in keyof T]: T[P] extends Array<any>
-    ? (
-        index: number
-      ) => FieldChain<T[P][0]> extends string
-        ? FieldGetter
-        : FieldChain<T[P][0]>
-    : T[P] extends Date
+  [P in keyof T]: IsAny<T[P]> extends true
     ? FieldGetter
-    : T[P] extends File
+    : T[P] extends Array<any>
+    ? (index: number) => FieldGetter
+    : T[P] extends Date | File
     ? FieldGetter
     : T[P] extends object
     ? FieldChain<T[P]>
