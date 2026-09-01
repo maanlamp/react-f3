@@ -1,6 +1,6 @@
 {
   "name": "react-f3",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "type": "module",
   "description": "Components, hooks & utilities for creating and managing delightfully simple form experiences in React.",
   "keywords": [
@@ -29,7 +29,7 @@
   "types": "dist/react-f3.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build"
+    "build": "tsc -p tsconfig.app.json --noEmit && vite build"
   },
   "peerDependencies": {
     "react": "^19.0.0",
