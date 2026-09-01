@@ -17,8 +17,11 @@ export type FormProps<
  * it.
  *
  * Attaches `form.handleSubmit` and `form.ref`, and forwards every
- * other prop to the `<form/>`. Optional: attach those two yourself
- * and any `<form/>` will do.
+ * other prop to the `<form/>`. Those two win over anything spread
+ * in, since replacing the ref would cut `useField`, `useFieldset`
+ * and `reset()` off from the element they read.
+ *
+ * Optional: attach both yourself and any `<form/>` will do.
  */
 export const Form = <
   Shape extends ZodRawShape,
@@ -34,10 +37,10 @@ export const Form = <
     keyof FormProps<Shape, Schema> | "onSubmit"
   >) => (
   <form
+    {...rest}
     className={classNames([style.form, className])}
     onSubmit={form.handleSubmit}
     ref={form.ref}
-    {...rest}
   >
     <fieldset className={style.fieldset} disabled={form.isSubmitting}>
       {children}
