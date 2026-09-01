@@ -11,6 +11,15 @@ export type FieldProps<
   children: (field: UseFieldReturn) => ReactNode;
 }>;
 
+/**
+ * Render-prop form of {@link useField}, for reading one field's
+ * value without splitting the surrounding component in two.
+ *
+ * @example
+ * <Field form={form} name={form.fields.email()}>
+ *   {(value) => <p>You typed {value}</p>}
+ * </Field>
+ */
 export const Field = <
   Shape extends ZodRawShape,
   Schema extends ZodObject<Shape>
@@ -28,8 +37,23 @@ export type UsefieldParams<
   name: string;
 }>;
 
+/**
+ * The field's current value, or `undefined` while the form has not
+ * mounted yet or no input carries that name.
+ */
 export type UseFieldReturn = string | undefined;
 
+/**
+ * Tracks one input's current value by listening for `input` and
+ * `reset` on the form element.
+ *
+ * Re-renders the calling component on every keystroke in that field,
+ * so reach for it where a field's value drives the UI, and leave the
+ * rest of the form to the DOM.
+ *
+ * @example
+ * const email = useField({ form, name: form.fields.email() });
+ */
 export const useField = <
   Shape extends ZodRawShape,
   Schema extends ZodObject<Shape>

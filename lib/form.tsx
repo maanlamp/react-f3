@@ -11,6 +11,15 @@ export type FormProps<
   form: UseFormReturn<Shape, Schema>;
 }>;
 
+/**
+ * A `<form/>` whose children sit in a `<fieldset/>` that is disabled
+ * while the form is submitting, which disables every input inside
+ * it.
+ *
+ * Attaches `form.handleSubmit` and `form.ref`, and forwards every
+ * other prop to the `<form/>`. Optional: attach those two yourself
+ * and any `<form/>` will do.
+ */
 export const Form = <
   Shape extends ZodRawShape,
   Schema extends ZodObject<Shape>

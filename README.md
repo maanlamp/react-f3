@@ -317,6 +317,97 @@ The type juggling around the Select component is just to treat single and multi 
 
 </details>
 
+### Server-side issues
+
+<details>
+<summary>Click here for an example of a form that gets rejected by the server after the schema accepted it.</summary>
+
+Your schema can only check what the browser can see. Whether an email address is already taken is a question only your server can answer, so return the issues from `onSubmit` and they land in the same error chain as the schema's own:
+
+```tsx
+const FormSchema = z.object({
+  email: z.string().refine((x) => x.includes("@")),
+  password: z.string().min(8),
+});
+
+const SignUpForm = () => {
+  const form = useForm({
+    schema: FormSchema,
+    onSubmit: async (data) => {
+      const response = await fetch("/api/sign-up", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+
+      if (response.status === 409) {
+        // Returning issues rejects the submission
+        return [
+          {
+            code: "custom",
+            path: ["email"],
+            message: "That email is already taken",
+          },
+        ] satisfies z.core.$ZodIssue[];
+      }
+    },
+  });
+
+  return (
+    <Form form={form}>
+      <label>
+        <span>Email</span>
+        <input name={form.fields.email()} />
+        {form.errors.email((issue) => (
+          <Issue issue={issue} />
+        ))}
+      </label>
+      <label>
+        <span>Password</span>
+        <input name={form.fields.password()} type="password" />
+      </label>
+      <button type="submit" disabled={!form.isValid}>
+        Submit
+      </button>
+    </Form>
+  );
+};
+```
+
+The `path` is what ties an issue to a field, exactly like the paths Zod produces. Get it wrong and the issue exists but nothing renders it, so reach for `form.fields.email()` if you need to check what a path looks like. Nested paths are arrays: `["todos", 0, "title"]`.
+
+Returning nothing (or an empty array) counts as a success, so a fire-and-forget `onSubmit` keeps working as it always has.
+
+For issues that don't arrive as a reply to a submit, there is `form.setIssues`. It's a regular state setter, so it takes an updater function too:
+
+```tsx
+const form = useForm({ schema: FormSchema, onSubmit });
+
+const query = useQuery({
+  queryKey: ["availability"],
+  queryFn: () => fetch("/api/availability").then((r) => r.json()),
+});
+
+useEffect(() => {
+  if (query.data?.taken) {
+    form.setIssues([
+      { code: "custom", path: ["email"], message: "That email is taken" },
+    ]);
+  }
+}, [form.setIssues, query.data]);
+```
+
+However they got there, server issues are held by the form itself rather than by you, which means they behave like any other validation issue:
+
+- `form.validation` includes them, so it always agrees with `form.errors`.
+- `form.isValid` is `false` while any of them are present.
+- `form.reset()` and `form.resetValidation()` clear them.
+- The next submit clears them, so a stale rejection never outlives the data it was about.
+
+<br/>
+<br/>
+
+</details>
+
 <br/>
 <br/>
 
