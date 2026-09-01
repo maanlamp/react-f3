@@ -74,6 +74,17 @@ export type UseFormReturn<
   validation: Validation<Shape, Schema> | undefined;
 
   /**
+   * Whatever `onSubmit` threw during the last submit, such as a
+   * `fetch` that never reached the server. `undefined` when it
+   * returned normally.
+   *
+   * A throw is a failure of the submit rather than of the data, so
+   * it leaves `isValid` alone; return issues instead to blame a
+   * field.
+   */
+  submitError: unknown;
+
+  /**
    * Adds issues your schema can't produce, such as ones that arrive
    * from a server after the form was submitted. A regular state
    * setter, so it also takes an updater function.
@@ -84,8 +95,8 @@ export type UseFormReturn<
   setIssues: Dispatch<SetStateAction<Issues | undefined>>;
 
   /**
-   * Drops every issue and returns the form to its pre-submit state,
-   * leaving the inputs alone.
+   * Drops every issue and any submit error, returning the form to
+   * its pre-submit state and leaving the inputs alone.
    */
   resetValidation: () => void;
 
@@ -151,6 +162,7 @@ export const useForm = <
 }: UseFormParams<Shape, Schema>): UseFormReturn<Shape, Schema> => {
   const [parsed, setParsed] = useState<Validation<Shape, Schema>>();
   const [issues, setIssues] = useState<Issues>();
+  const [submitError, setSubmitError] = useState<unknown>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const ref = useRef<HTMLFormElement>(null);
 
@@ -173,6 +185,7 @@ export const useForm = <
     e.preventDefault();
     setIsSubmitting(true);
     setIssues(undefined);
+    setSubmitError(undefined);
     try {
       const data = parseFormData(new FormData(e.currentTarget));
       const result = await schema.safeParseAsync(data);
@@ -180,6 +193,11 @@ export const useForm = <
       if (result.success) {
         setIssues((await onSubmit(result.data)) || undefined);
       }
+    } catch (error) {
+      // React drops the promise this handler returns, so anything
+      // thrown here would otherwise surface as an unhandled
+      // rejection and leave the form looking idle.
+      setSubmitError(error);
     } finally {
       setIsSubmitting(false);
     }
@@ -195,6 +213,7 @@ export const useForm = <
   const resetValidation = useCallback(() => {
     setParsed(undefined);
     setIssues(undefined);
+    setSubmitError(undefined);
   }, []);
 
   const reset = useCallback(() => {
@@ -206,6 +225,7 @@ export const useForm = <
     isSubmitting,
     isValid,
     validation,
+    submitError,
     setIssues,
     resetValidation,
     handleSubmit,

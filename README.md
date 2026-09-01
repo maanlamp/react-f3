@@ -403,6 +403,14 @@ However they got there, server issues are held by the form itself rather than by
 - `form.reset()` and `form.resetValidation()` clear them.
 - The next submit clears them, so a stale rejection never outlives the data it was about.
 
+Issues are for data the server rejected. A request that never got an answer at all is a different problem, and it lands in `form.submitError`:
+
+```tsx
+{form.submitError ? <p>Something went wrong. Try again?</p> : null}
+```
+
+Anything `onSubmit` throws ends up there instead of becoming an unhandled rejection, which is what makes an offline submit visible rather than a form that just stops responding.
+
 <br/>
 <br/>
 
