@@ -34,19 +34,20 @@ export const getErrorByPath = (
         return;
       }
 
-      const matched = issues.find(
-        (issue) => issue.path.join(".") === path.join(".")
+      const target = path.join(".");
+      const matched = issues.filter(
+        (issue) => issue.path.join(".") === target
       );
 
-      if (!matched) {
+      if (!matched.length) {
         return;
       }
 
       if (typeof arg === "function") {
-        return arg(matched);
+        return arg(...matched);
       }
 
-      return matched;
+      return matched[0];
     },
   });
 
@@ -55,14 +56,18 @@ export const getErrorByPath = (
  */
 export interface ErrorGetter {
   /**
-   * The issue at this path, or `undefined` when there is none.
+   * The first issue at this path, or `undefined` when there is
+   * none.
    */
   (): z.core.$ZodIssue | undefined;
 
   /**
-   * Calls `render` with the issue at this path and returns its
+   * Calls `render` with every issue at this path and returns its
    * result, or `undefined` when there is no issue. Renders nothing
    * for a valid field.
+   *
+   * One field can fail several ways at once, so a schema like
+   * `z.string().min(8).regex(/\d/)` hands `render` both issues.
    */
   <
     Fn extends (
