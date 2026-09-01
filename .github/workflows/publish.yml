@@ -1,0 +1,50 @@
+name: Publish
+
+# Publishing is authenticated by GitHub itself, through OIDC: this
+# workflow asks GitHub for a short-lived token that says "I am the
+# publish.yml workflow in maanlamp/react-f3", and npm checks that
+# against the trusted publisher registered on the package. Nothing
+# long-lived is stored, so there is no token here to leak or rotate.
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  # Lets the job mint the OIDC token. Without it, npm sees no identity.
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+
+      # Trusted publishing needs npm 11.5.1 or newer.
+      - run: npm install --global npm@latest
+
+      - uses: oven-sh/setup-bun@v2
+
+      - run: bun install --frozen-lockfile
+
+      - name: Check the tag matches package.json
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          version="$(node --print "require('./package.json').version")"
+          if [ "$tag" != "$version" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json version $version" >&2
+            exit 1
+          fi
+
+      # prepublishOnly builds first. No NODE_AUTH_TOKEN on purpose:
+      # setting one would make npm authenticate as that token instead
+      # of through OIDC.
+      - run: npm publish
