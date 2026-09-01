@@ -4,6 +4,9 @@ import type { UseFormReturn } from "./use-form";
 
 type Falsy<T> = T | false | 0 | "" | null | undefined | 0n;
 
+const rows = (size: number) =>
+  Array.from({ length: size }, () => crypto.randomUUID());
+
 /**
  * Tracks a repeatable group of fields; the "add another one" list.
  *
@@ -32,9 +35,9 @@ export const useFieldset = <
   form: UseFormReturn<Shape, Schema>,
   defaultValue?: Falsy<{ length: number }>
 ) => {
-  const length = defaultValue || { length: 0 };
-  const [fields, setFields] = useState<ReadonlyArray<string>>(
-    Array.from(length, () => crypto.randomUUID())
+  const size = defaultValue ? defaultValue.length : 0;
+  const [fields, setFields] = useState<ReadonlyArray<string>>(() =>
+    rows(size)
   );
 
   const add = useCallback(() => {
@@ -46,10 +49,22 @@ export const useFieldset = <
   }, []);
 
   useEffect(() => {
-    form.ref.current?.addEventListener("reset", () => {
-      setFields(Array.from(length, () => crypto.randomUUID()));
-    });
-  });
+    const element = form.ref.current;
+
+    if (!element) {
+      return;
+    }
+
+    const handleReset = () => {
+      setFields(rows(size));
+    };
+
+    element.addEventListener("reset", handleReset);
+
+    return () => {
+      element.removeEventListener("reset", handleReset);
+    };
+  }, [form.ref, size]);
 
   return { fields, add, remove };
 };
