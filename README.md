@@ -10,6 +10,8 @@
 
 Components, hooks & utilities for creating and managing delightfully simple form experiences in React.
 
+[Changelog](./CHANGELOG.md)
+
 </div>
 
 <br/>
@@ -33,6 +35,8 @@ Somehow, all the biggest form libraries for React do not tick all these boxes. T
 - Aren't type-safe at all.
 
 `React-f3` promises to take a step back, rethink what a form actually is (and importantly, what it **_is not_**), and makes developing these forms a delightful yet robust experience.
+
+It is also entirely headless: no stylesheet to import, no class names on the elements it renders, nothing to override. How your form looks is your call.
 
 <br/>
 <br/>
@@ -523,6 +527,14 @@ const Example = () => {
 <br/>
 
 It's a small helper component that wraps your forms in a `<fieldset/>` which gets disabled while your form is submitting. A neat feature of HTML's native form api is that any input that is a child of a disabled fieldset will also get disabled! There is absolutely no need to use the `<Form/>` component, but it is a good basic user experience.
+
+That `<fieldset/>` is a real element, and `react-f3` ships no stylesheet to hide it, so it sits between your `<form/>` and your inputs. Browsers give it a border, padding and a margin of their own, and it breaks the parent-child relationship any `grid` or `flex` layout on the `<form/>` needs. Styling is yours to decide, so if you'd rather the wrapper stayed out of the way, take it out of the box tree yourself:
+
+```css
+form > fieldset {
+  display: contents;
+}
+```
 
 <br/>
 

@@ -1,7 +1,5 @@
-import classNames from "classnames";
 import type { ComponentPropsWithoutRef } from "react";
 import type { ZodObject, ZodRawShape } from "zod";
-import style from "./form.module.css";
 import type { UseFormReturn } from "./use-form";
 
 export type FormProps<
@@ -28,7 +26,6 @@ export const Form = <
   Schema extends ZodObject<Shape>
 >({
   children,
-  className,
   form,
   ...rest
 }: FormProps<Shape, Schema> &
@@ -36,14 +33,7 @@ export const Form = <
     ComponentPropsWithoutRef<"form">,
     keyof FormProps<Shape, Schema> | "onSubmit"
   >) => (
-  <form
-    {...rest}
-    className={classNames([style.form, className])}
-    onSubmit={form.handleSubmit}
-    ref={form.ref}
-  >
-    <fieldset className={style.fieldset} disabled={form.isSubmitting}>
-      {children}
-    </fieldset>
+  <form {...rest} onSubmit={form.handleSubmit} ref={form.ref}>
+    <fieldset disabled={form.isSubmitting}>{children}</fieldset>
   </form>
 );
