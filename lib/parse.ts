@@ -4,6 +4,26 @@
 export const DIGITS = /^\d+$/;
 
 /**
+ * Rebuilds the parsed tree on ordinary objects.
+ *
+ * The tree is grown on null-prototype objects, so that a field named
+ * `__proto__` or `constructor` writes an own property instead of
+ * reaching `Object.prototype`. `Object.fromEntries` keeps that true
+ * here: it defines properties, where assigning would run the
+ * inherited setter it was avoiding in the first place.
+ */
+const toPlainObjects = (value: any): any =>
+  Array.isArray(value)
+    ? value.map(toPlainObjects)
+    : value !== null &&
+      typeof value === "object" &&
+      Object.getPrototypeOf(value) === null
+    ? Object.fromEntries(
+        Object.entries(value).map(([k, v]) => [k, toPlainObjects(v)])
+      )
+    : value;
+
+/**
  * Expands a `FormData` into the nested object a schema can parse,
  * by splitting each entry's name on `.`. A numeric segment becomes
  * an array index, anything else an object key.
@@ -16,7 +36,7 @@ export const DIGITS = /^\d+$/;
  * { address: { street: "..." }, tags: ["..."] }
  */
 export const parseFormData = (data: FormData): unknown => {
-  const parsed: any = {};
+  const parsed: any = Object.create(null);
 
   for (const [k, v] of data.entries()) {
     const path = k.split(".");
@@ -28,7 +48,7 @@ export const parseFormData = (data: FormData): unknown => {
       if (DIGITS.test(chunks[0])) {
         target[chunk] ??= [];
       } else {
-        target[chunk] ??= {};
+        target[chunk] ??= Object.create(null);
       }
       target = target[chunk];
     }
@@ -36,5 +56,5 @@ export const parseFormData = (data: FormData): unknown => {
     target[chunks.shift()!] = v;
   }
 
-  return parsed;
+  return toPlainObjects(parsed);
 };
