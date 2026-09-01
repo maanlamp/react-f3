@@ -36,7 +36,7 @@ export const Field = <
   children,
 }: FieldProps<Shape, Schema>) => children(useField({ form, name }));
 
-export type UsefieldParams<
+export type UseFieldParams<
   Shape extends ZodRawShape,
   Schema extends ZodObject<Shape>
 > = Readonly<{
@@ -72,7 +72,7 @@ export const useField = <
 >({
   form,
   name,
-}: UsefieldParams<Shape, Schema>): UseFieldReturn => {
+}: UseFieldParams<Shape, Schema>): UseFieldReturn => {
   const getInputValue = useCallback((): UseFieldReturn => {
     const elements = form.ref.current?.querySelectorAll<HTMLInputElement>(
       `[name="${escape(name)}"]`

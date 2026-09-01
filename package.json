@@ -1,6 +1,6 @@
 {
   "name": "react-f3",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "type": "module",
   "description": "Components, hooks & utilities for creating and managing delightfully simple form experiences in React.",
   "keywords": [
@@ -25,6 +25,14 @@
   "files": [
     "dist"
   ],
+  "exports": {
+    ".": {
+      "types": "./dist/react-f3.d.ts",
+      "default": "./dist/react-f3.js"
+    },
+    "./main.css": "./dist/main.css",
+    "./package.json": "./package.json"
+  },
   "main": "dist/react-f3.js",
   "types": "dist/react-f3.d.ts",
   "scripts": {

@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import type { HTMLProps } from "react";
+import type { ComponentPropsWithoutRef } from "react";
 import type { ZodObject, ZodRawShape } from "zod";
 import style from "./form.module.css";
 import type { UseFormReturn } from "./use-form";
@@ -33,7 +33,7 @@ export const Form = <
   ...rest
 }: FormProps<Shape, Schema> &
   Omit<
-    HTMLProps<HTMLFormElement>,
+    ComponentPropsWithoutRef<"form">,
     keyof FormProps<Shape, Schema> | "onSubmit"
   >) => (
   <form

@@ -1,9 +1,4 @@
 /**
- * Matches a path segment that addresses an array index.
- */
-export const DIGITS = /^\d+$/;
-
-/**
  * Whether these keys are exactly `0` through `n - 1`.
  *
  * `Object.keys` lists array-index keys first, in ascending numeric
@@ -52,6 +47,12 @@ const normalise = (value: any): any => {
  * which quietly renumbers the fields around it. Schemas that outlive
  * a removal want `z.record`.
  *
+ * A name used by more than one input keeps every value, as a
+ * checkbox group does. One input still yields one value, because
+ * nothing in `FormData` distinguishes a group of one from a plain
+ * field; name the inputs `hobbies.0`, `hobbies.1` and so on where
+ * the schema needs an array either way.
+ *
  * Values are always strings or `File`s, as that is all `FormData`
  * holds; coercing them is the schema's job.
  *
@@ -62,8 +63,9 @@ const normalise = (value: any): any => {
 export const parseFormData = (data: FormData): unknown => {
   const parsed: any = Object.create(null);
 
-  for (const [k, v] of data.entries()) {
-    const chunks = k.split(".");
+  for (const key of new Set(data.keys())) {
+    const values = data.getAll(key);
+    const chunks = key.split(".");
     let target = parsed;
 
     while (chunks.length > 1) {
@@ -72,7 +74,7 @@ export const parseFormData = (data: FormData): unknown => {
       target = target[chunk];
     }
 
-    target[chunks.shift()!] = v;
+    target[chunks.shift()!] = values.length > 1 ? values : values[0];
   }
 
   return normalise(parsed);
